@@ -1,6 +1,8 @@
+import { Err } from '../errors/error';
 import { User } from '../models/user';
 import { UserId } from '../models/userId';
 import {
+  CheckResult,
   CreateResult,
   DeleteResult,
   GetResult,
@@ -13,47 +15,65 @@ const testUser: User = {
   userId: 'Test',
 };
 
+const testError: Err = {
+  message: 'TestError',
+  innerError: null,
+};
+
 const mockCreate = jest.fn((_user: User): CreateResult => {
   if (_user.userId === testUser.userId)
     return {
-      wasSuccess: false,
+      err: testError,
     };
   return {
-    wasSuccess: true,
+    err: null,
   };
 });
 
 const mockUpdate = jest.fn(
   (user: User): UpdateResult => ({
-    wasSuccess: true,
+    err: null,
   })
 );
 
 const mockGet = jest.fn((userId: UserId): GetResult => {
   if (userId === testUser.userId)
     return {
-      wasSuccess: true,
+      err: null,
       user: testUser,
     };
   return {
-    wasSuccess: true,
+    err: testError,
     user: null,
+  };
+});
+
+const mockCheck = jest.fn((userId: UserId): CheckResult => {
+  if (userId === testUser.userId)
+    return {
+      err: null,
+      isExist: true,
+    };
+  return {
+    err: null,
+    isExist: false,
   };
 });
 
 const mockDelete = jest.fn((userId: UserId): DeleteResult => {
   if (userId === testUser.userId)
     return {
-      wasSuccess: true,
+      err: null,
     };
   return {
-    wasSuccess: false,
+    err: testError,
   };
 });
 
 const mockRepo: UserRepository = {
   create: mockCreate,
   get: mockGet,
+  checkExist: mockCheck,
   update: mockUpdate,
   delete: mockDelete,
 };
@@ -70,9 +90,9 @@ describe('test user create', () => {
     };
     const response = service.createUser(user);
     expect(mockCreate).toBeCalled();
-    expect(mockGet).toBeCalled();
+    expect(mockCheck).toBeCalled();
     expect(response).not.toBeNull();
-    expect(response?.wasSuccess).toBeTruthy();
+    expect(response.err).toBeFalsy();
   });
 
   it('create user failure', () => {
@@ -82,9 +102,9 @@ describe('test user create', () => {
     };
     const response = service.createUser(user);
     expect(mockCreate).not.toBeCalled();
-    expect(mockGet).toBeCalled();
+    expect(mockCheck).toBeCalled();
     expect(response).not.toBeNull();
-    expect(response.wasSuccess).toBeFalsy();
+    expect(response.err).toBeTruthy();
   });
 
   it('get user successfully', () => {
@@ -98,7 +118,7 @@ describe('test user create', () => {
     const service = userService({ userRepository: mockRepo });
     const response = service.getUser('unknown');
     expect(mockGet).toBeCalled();
-    expect(response.wasSuccess).toBeTruthy();
+    expect(response.err).not.toBeNull();
     expect(response.user).toBeNull();
   });
 
@@ -106,13 +126,13 @@ describe('test user create', () => {
     const service = userService({ userRepository: mockRepo });
     const response = service.deleteUser(testUser.userId);
     expect(mockDelete).toBeCalled();
-    expect(response.wasSuccess).toBeTruthy();
+    expect(response.err).toBeFalsy();
   });
 
   it('delete user', () => {
     const service = userService({ userRepository: mockRepo });
     const response = service.deleteUser('unknown');
     expect(mockDelete).toBeCalled();
-    expect(response.wasSuccess).toBeFalsy();
+    expect(response.err).toBeTruthy();
   });
 });

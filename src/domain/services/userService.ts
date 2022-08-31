@@ -1,3 +1,4 @@
+import { Err } from '../errors/error';
 import { User } from '../models/user';
 import { UserId } from '../models/userId';
 import { UserRepository } from '../repositories/user';
@@ -7,43 +8,73 @@ type Args = {
 };
 
 type CreateUserResponse = {
-  wasSuccess: boolean;
+  err: Err | null;
 };
 
 type GetUserResponse = {
-  wasSuccess: boolean;
+  err: Err | null;
   user: User | null;
 };
 
 export const userService = ({ userRepository }: Args) => {
   const createUser = (user: User): CreateUserResponse => {
-    if (isUserExist(user.userId)) {
+    const { err, isExist } = isUserExist(user.userId);
+    if (err != null) {
       return {
-        wasSuccess: false,
+        err: {
+          message: 'InternalErrorOccurred',
+          innerError: err,
+        },
       };
     }
-    return userRepository.create(user);
-  };
-  const getUser = (userId: UserId): GetUserResponse => {
-    const res = userRepository.get(userId);
-    if (!res.wasSuccess) {
+
+    if (isExist) {
       return {
-        wasSuccess: true,
+        err: {
+          message: 'UserAlreadyExists',
+          innerError: null,
+        },
+      };
+    }
+    const result = userRepository.create(user);
+    if (result.err != null) {
+      return {
+        err: {
+          message: 'CreateUserError',
+          innerError: result.err,
+        },
+      };
+    }
+    return { err: null };
+  };
+
+  const getUser = (userId: UserId): GetUserResponse => {
+    const { err, user } = userRepository.get(userId);
+    if (err != null) {
+      return {
+        err: {
+          message: 'GetUserError',
+          innerError: err,
+        },
         user: null,
       };
     }
     return {
-      wasSuccess: true,
-      user: res.user,
+      err: null,
+      user,
     };
   };
+
   const deleteUser = (userId: UserId) => {
     return userRepository.delete(userId);
   };
 
   const isUserExist = (userId: UserId) => {
-    const res = userRepository.get(userId);
-    return !!res.user;
+    const { err, isExist } = userRepository.checkExist(userId);
+    return {
+      err,
+      isExist,
+    };
   };
 
   return { createUser, getUser, deleteUser };
