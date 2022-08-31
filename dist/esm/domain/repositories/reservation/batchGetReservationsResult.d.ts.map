@@ -1,0 +1,1 @@
+{"version":3,"file":"batchGetReservationsResult.d.ts","sourceRoot":"","sources":["../../../../../src/domain/repositories/reservation/batchGetReservationsResult.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,WAAW,EAAE,MAAM,0BAA0B,CAAC;AAEvD,oBAAY,0BAA0B,GAAG;IACvC,SAAS,EAAE,OAAO,CAAC;IACnB,YAAY,EAAE,WAAW,EAAE,CAAC;CAC7B,CAAC"}

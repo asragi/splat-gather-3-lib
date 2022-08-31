@@ -1,6 +1,6 @@
-import { Err } from '../../errors/error';
-import { User } from '../../models/user';
-import { UserId } from '../../models/userId';
+import { Err } from '../errors/error';
+import { User } from '../models/user';
+import { UserId } from '../models/userId';
 
 export type CreateResult = {
   err: Err | null;

@@ -1,10 +1,10 @@
 import { User } from '../domain/models/user';
-import { UserRepository } from '../domain/repositories/user';
+import { userRepository } from '../domain/repositories';
 import { userService as userDomainService } from '../domain/services/userService';
 import { StatusCreated, StatusInternalServerError } from './lib/status';
 
 export type UserServiceArgs = {
-  userRepository: UserRepository;
+  userRepository: userRepository.UserRepository;
 };
 
 export type CreateCommand = {
@@ -15,7 +15,7 @@ export type CreateDTO = {
   status: number;
 };
 
-export const userAppService = ({ userRepository }: UserServiceArgs) => {
+export const service = ({ userRepository }: UserServiceArgs) => {
   const userService = userDomainService({ userRepository });
   const create = (command: CreateCommand): CreateDTO => {
     const user: User = {

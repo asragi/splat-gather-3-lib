@@ -1,0 +1,1 @@
+{"version":3,"file":"getAllTeamUserResult.d.ts","sourceRoot":"","sources":["../../../../../src/domain/repositories/organization/getAllTeamUserResult.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,QAAQ,EAAE,MAAM,uBAAuB,CAAC;AAEjD,oBAAY,oBAAoB,GAAG;IACjC,SAAS,EAAE,QAAQ,EAAE,CAAC;CACvB,CAAC"}

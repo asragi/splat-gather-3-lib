@@ -1,5 +1,5 @@
 {
-  "name": "splat-lib",
+  "name": "splat-gather-3-lib",
   "version": "1.0.0",
   "description": "",
   "scripts": {
@@ -10,7 +10,7 @@
     "build:esm": "tsc -p tsconfig.esm.json"
   },
   "keywords": [],
-  "author": "",
+  "author": "asRagi",
   "license": "ISC",
   "devDependencies": {
     "@jest/types": "^28.1.3",

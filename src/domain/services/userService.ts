@@ -1,10 +1,10 @@
 import { Err } from '../errors/error';
 import { User } from '../models/user';
 import { UserId } from '../models/userId';
-import { UserRepository } from '../repositories/user';
+import { userRepository } from '../repositories';
 
 type Args = {
-  userRepository: UserRepository;
+  userRepository: userRepository.UserRepository;
 };
 
 type CreateUserResponse = {
