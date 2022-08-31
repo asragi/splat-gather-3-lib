@@ -8,7 +8,7 @@ export declare type CreateCommand = {
 export declare type CreateDTO = {
     status: number;
 };
-export declare const userAppService: ({ userRepository }: UserServiceArgs) => {
+export declare const service: ({ userRepository }: UserServiceArgs) => {
     create: (command: CreateCommand) => CreateDTO;
 };
 //# sourceMappingURL=userAppService.d.ts.map

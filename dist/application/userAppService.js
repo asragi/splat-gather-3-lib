@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.userAppService = void 0;
+exports.service = void 0;
 const userService_1 = require("../domain/services/userService");
 const status_1 = require("./lib/status");
-const userAppService = ({ userRepository }) => {
+const service = ({ userRepository }) => {
     const userService = (0, userService_1.userService)({ userRepository });
     const create = (command) => {
         const user = {
@@ -17,4 +17,4 @@ const userAppService = ({ userRepository }) => {
         create,
     };
 };
-exports.userAppService = userAppService;
+exports.service = service;

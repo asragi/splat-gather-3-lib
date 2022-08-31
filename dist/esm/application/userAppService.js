@@ -1,6 +1,6 @@
 import { userService as userDomainService } from '../domain/services/userService';
 import { StatusCreated, StatusInternalServerError } from './lib/status';
-export const userAppService = ({ userRepository }) => {
+export const service = ({ userRepository }) => {
     const userService = userDomainService({ userRepository });
     const create = (command) => {
         const user = {

@@ -1,61 +1,5 @@
+import { mockRepo, testUser } from '../../infrastructure/mock/mockUserRepo';
 import { userService } from './userService';
-const testUser = {
-    userId: 'Test',
-};
-const testError = {
-    message: 'TestError',
-    innerError: null,
-};
-const mockCreate = jest.fn((_user) => {
-    if (_user.userId === testUser.userId)
-        return {
-            err: testError,
-        };
-    return {
-        err: null,
-    };
-});
-const mockUpdate = jest.fn((user) => ({
-    err: null,
-}));
-const mockGet = jest.fn((userId) => {
-    if (userId === testUser.userId)
-        return {
-            err: null,
-            user: testUser,
-        };
-    return {
-        err: testError,
-        user: null,
-    };
-});
-const mockCheck = jest.fn((userId) => {
-    if (userId === testUser.userId)
-        return {
-            err: null,
-            isExist: true,
-        };
-    return {
-        err: null,
-        isExist: false,
-    };
-});
-const mockDelete = jest.fn((userId) => {
-    if (userId === testUser.userId)
-        return {
-            err: null,
-        };
-    return {
-        err: testError,
-    };
-});
-const mockRepo = {
-    create: mockCreate,
-    get: mockGet,
-    checkExist: mockCheck,
-    update: mockUpdate,
-    delete: mockDelete,
-};
 describe('test user create', () => {
     afterEach(() => {
         jest.clearAllMocks();
@@ -66,8 +10,8 @@ describe('test user create', () => {
             userId: 'Test2',
         };
         const response = service.createUser(user);
-        expect(mockCreate).toBeCalled();
-        expect(mockCheck).toBeCalled();
+        expect(mockRepo.create).toBeCalled();
+        expect(mockRepo.checkExist).toBeCalled();
         expect(response).not.toBeNull();
         expect(response.err).toBeFalsy();
     });
@@ -77,34 +21,34 @@ describe('test user create', () => {
             userId: 'Test',
         };
         const response = service.createUser(user);
-        expect(mockCreate).not.toBeCalled();
-        expect(mockCheck).toBeCalled();
+        expect(mockRepo.create).not.toBeCalled();
+        expect(mockRepo.checkExist).toBeCalled();
         expect(response).not.toBeNull();
         expect(response.err).toBeTruthy();
     });
     it('get user successfully', () => {
         const service = userService({ userRepository: mockRepo });
         const response = service.getUser(testUser.userId);
-        expect(mockGet).toBeCalled();
+        expect(mockRepo.get).toBeCalled();
         expect(response.user).toEqual(testUser);
     });
     it('get user failure', () => {
         const service = userService({ userRepository: mockRepo });
         const response = service.getUser('unknown');
-        expect(mockGet).toBeCalled();
+        expect(mockRepo.get).toBeCalled();
         expect(response.err).not.toBeNull();
         expect(response.user).toBeNull();
     });
     it('delete user', () => {
         const service = userService({ userRepository: mockRepo });
         const response = service.deleteUser(testUser.userId);
-        expect(mockDelete).toBeCalled();
+        expect(mockRepo.delete).toBeCalled();
         expect(response.err).toBeFalsy();
     });
     it('delete user', () => {
         const service = userService({ userRepository: mockRepo });
         const response = service.deleteUser('unknown');
-        expect(mockDelete).toBeCalled();
+        expect(mockRepo.delete).toBeCalled();
         expect(response.err).toBeTruthy();
     });
 });
